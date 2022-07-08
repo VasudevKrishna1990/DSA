@@ -1,0 +1,103 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<vector>
+using namespace std;
+
+int findPeakElement(vector<int>a){
+    int s = 0;
+    int e = a.size()-1;
+    int n = a.size();
+    while(s<=e){
+        int mid = s+ (e-s)/2;
+        if(mid > 0 && mid < n-1){
+            if(a[mid] > a[mid-1]  && a[mid] > a[mid + 1])
+            {
+                return mid;
+            }
+            
+            if(a[mid] < a[mid+1]){
+                s = mid+1;
+            }
+            else if(a[mid] < a[mid-1]){
+                e = mid-1;
+            }
+        }
+        else if(mid == 0){
+            if(a[mid] > a[mid+1]){
+                return mid;
+            }
+            else {
+                return mid+1;
+            }
+        }
+        else if(mid == n-1){
+            if(a[mid] > a[mid-1]){
+                return mid;
+            }
+            else{
+                return mid-1; 
+            }
+        }
+    }
+    return -1;
+}
+
+int findElementSorted(vector<int>a,int s,int e,int key){
+ 
+    while(s<=e){
+        int mid = s+(e-s)/2;
+        if(a[mid] == key){
+            return mid;
+        }
+        if(a[mid] > key){
+            e = mid-1;
+        }
+        else if(a[mid] < key){
+            s = mid +1;
+        }
+    }
+    return -1;
+}
+
+int findElementReverseSorted(vector<int>a,int s,int e,int key){
+    while(s<=e){
+        int mid = s+(e-s)/2;
+        if(a[mid] == key){
+            return mid;
+        }
+        if(a[mid] > key){
+            s = mid + 1;
+        }
+        else if(a[mid] < key){
+            e = mid - 1;
+        }
+    }
+    return -1;
+}
+int searchBitonic(vector<int>a,int key){
+    int peakIndex = findPeakElement(a);
+    if(peakIndex != -1)
+    {
+        int searchIndex = findElementSorted(a,0,peakIndex-1,key);
+        if(searchIndex == -1)
+            searchIndex = findElementReverseSorted(a,peakIndex,a.size()-1,key);
+        return searchIndex;
+    }
+    return -1;
+}
+
+int main()
+{
+    vector<int> a ={3,5,8,12,4,2,1,0};
+    int key = 5;
+    int searchIndex = searchBitonic(a,key); 
+    (searchIndex== -1) ? cout<<"Not found "<<endl : cout<<"Key Found at "<<searchIndex <<endl; 
+    return 0;
+}

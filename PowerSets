@@ -1,0 +1,51 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<vector>
+using namespace std;
+
+
+void print(vector<string>res){
+    for(string str:res)
+        cout<< str << endl;
+}
+
+void solve(string s, string op, vector<string>&res){
+    if(s.length() == 0){
+        res.push_back(op);
+        return;
+    }
+    string op1;
+    string op2;
+    if(op.length()){
+        op1 = op;
+        op2 = op;
+    }
+    
+    op1 += s.at(0);
+    
+    solve(s.substr(1),op1,res);
+    solve(s.substr(1),op2,res);
+    
+}
+
+vector<string> generatePowerSets(string str){
+    vector<string>res;
+    solve(str,"",res);
+    return res;
+}
+
+int main()
+{
+    cout<<"Power Sets "<<endl;
+    string str ="abc";
+    vector<string>res = generatePowerSets(str);
+    print(res);
+    return 0;
+}

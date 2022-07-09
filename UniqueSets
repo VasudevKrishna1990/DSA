@@ -1,0 +1,60 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<vector>
+#include<set>
+#include<algorithm>
+using namespace std;
+
+void print(vector<int>v){
+    for(int val : v)
+        cout<<val << " " ;
+    cout<<endl;
+}
+
+void solve(vector<int>v,int n,vector<int>op,set<vector<int>>&res){
+    if(n ==0){
+        res.insert(op);
+        return;
+    }
+    
+    vector<int>op1 ;     vector<int>op2 ;
+    if(op.size()){
+        op1 = op;
+        op2 = op;
+    }
+    
+    op1.push_back(v[n-1]);
+    solve(v,n-1,op1,res);
+    solve(v,n-1,op2,res);
+}
+
+vector<vector<int>> genereateUniqueSets(vector<int>v,int n){
+    
+    sort(v.begin(),v.end(),greater<int>());
+    set<vector<int>>res;
+    solve(v,n,{},res);
+    set<vector<int>>::iterator it;
+    vector<vector<int>>ret;
+    for(it = res.begin();it!= res.end();it++){
+        ret.push_back(*it);
+    }
+    return ret;
+}
+
+int main()
+{
+
+    vector<int>in ={2,1,2};
+    int n = in.size();
+    vector<vector<int>> ret = genereateUniqueSets(in,n);
+    for(vector<int>v : ret)
+        print(v);
+    return 0;
+}

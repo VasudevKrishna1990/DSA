@@ -1,0 +1,55 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<stack>
+using namespace std;
+
+void print(stack<int>s){
+    while(s.size()){
+        cout<<s.top() <<endl;
+        s.pop();
+    }
+    cout<<endl;
+}
+
+void stackReverseUtil(stack<int>&s,int val){
+    
+    if(s.size() == 0){
+        s.push(val);
+        return;
+    }
+    
+    int tempVal = s.top();
+    s.pop();
+    stackReverseUtil(s,val);
+    s.push(tempVal);
+}
+
+void reverseStack(stack<int>&s){
+    if(s.size() == 1){
+        return ;
+    }
+    int val = s.top();
+    s.pop();
+    reverseStack(s);
+    stackReverseUtil(s,val);
+}
+
+int main()
+{
+    cout<<"Reverse Stack "<<endl;
+    stack<int>s;
+    s.push(1);s.push(2);s.push(3);s.push(4);s.push(5);
+    cout<<"Before " <<endl; 
+    print(s);
+    reverseStack(s);
+    cout<<"After " <<endl;
+    print(s);
+    return 0;
+}

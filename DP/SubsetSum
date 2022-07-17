@@ -1,0 +1,112 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<vector>
+#include<cstring>
+using namespace std;
+
+bool solve(int ind, vector<int>&a,int sum, vector<bool>&visited,vector<int>&path)
+{
+    if(0 == sum){
+        for(int val:path)
+            //cout<<val<<" " ;
+            //cout<<"++++++++++++++++++++++++";
+        return true;
+    }
+    
+    if(sum < 0) return false;
+    
+    for(int i =0;i<a.size();i++){
+        
+        if(visited[i] == false){
+            sum -= a[i];
+            visited[i] = true;
+            path.push_back(a[i]);
+            if(solve(ind+1,a,sum,visited,path)) return true;
+            sum += a[i];
+            path.pop_back();
+            visited[i] = false;
+        }
+    }
+    return false;
+}
+    
+bool isSubsetSum(vector<int>&a,int sum)
+{
+    vector<bool>visited(a.size(),false);
+    vector<int>path;
+    return solve(0,a,sum,visited,path);
+}
+int dp[1001][1001];
+bool isSubsetSumR(vector<int>&a,int sum,int n){
+    if(n == 0)
+        return false;
+    if(sum == 0)
+        return true;
+    if(dp[n][sum] != -1)
+        return dp[n][sum];
+    if(sum >= a[n-1])
+        return dp[n][sum] = isSubsetSumR(a,sum-a[n-1],n-1) || isSubsetSumR(a,sum,n-1);
+    return dp[n][sum] = isSubsetSumR(a,sum,n-1);
+}
+
+void print(vector<vector<bool>>&t){
+    cout<<endl;
+    for(vector<bool>v:t){
+        for(bool val : v)
+            {
+                if(val == true)
+                    cout<< "true " <<" ";
+                else
+                    cout<< "false" <<" ";
+            }
+            cout<<endl;
+    }
+}
+
+bool isSubsetSumTab(vector<int>&a, int sum){
+    vector<vector<bool>> t(10,vector<bool>(10,false));
+    for(int i =0;i<a.size()+1;i++){
+        for(int j = 0;j<sum+1;j++){
+            
+            if(i == 0)
+                t[i][j] = false;
+            if(j == 0)
+                t[i][j] = true;
+        }
+    }
+    
+    //t[0][0] = true;
+    for(int i =1;i<a.size()+1;i++){
+        for(int j = 1;j<sum+1;j++){
+            
+           if(j >= a[i-1])
+            {
+                t[i][j] = t[i-1][j-a[i-1]] || t[i-1][j];
+            }
+            else
+            {
+                t[i][j] = t[i-1][j];
+            }
+        }
+    }
+    //print(t);
+    
+    return t[a.size()][sum];
+}
+
+int main()
+{
+    vector<int>a = {2,3,8};
+    //cout<<"\nIsSubsetSum possible " << isSubsetSum(a,11);
+    memset(dp,-1,sizeof(dp));
+    //cout<<isSubsetSumR(a,19,a.size());
+    cout<<isSubsetSumTab(a,19);
+    return 0;
+}

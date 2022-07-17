@@ -1,0 +1,79 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<vector>
+#include<climits>
+using namespace std;
+
+int findSum(vector<int>a){
+    int sum =0;
+    for(int v:a)
+        sum +=v;
+    return sum;
+}
+
+int minSubsetSumDiff(vector<int>a,int range){
+    
+    vector<vector<int>>t(a.size()+1,vector<int>(range+1,0));
+    for(int i =0;i<a.size()+1;i++)
+    {
+        for(int j =0;j<range+1;j++)
+        {
+            if(i == 0)
+            {
+                t[i][j] = 0; 
+            }
+            if(j == 0){
+                t[i][j] = 1;
+            }
+            
+            if(i!=0 && j!=0){
+                if(j >= a[i-1]){
+                    t[i][j] = t[i-1][j-a[i-1]] || t[i-1][j];
+                }
+                else{
+                    t[i][j] = t[i-1][j];
+                }
+            }
+        }
+    }
+
+    {
+        for(vector<int>v:t)
+        {
+            for(int val : v)
+                cout<<val <<" " ;
+            cout<<endl;
+        }
+    }
+
+    int start = a.size();
+    int minDiff = INT_MAX;
+    for(int i = start;i< start+1;i++){
+        for(int j = 0;j<range/2+1;j++){
+             
+             if(t[i][j] == 1){
+                 
+                 int s1 = j;
+                 int s2 = range-s1;
+                 if(minDiff > abs(s2-s1))
+                    minDiff = abs(s2-s1);
+             }
+        }
+    }
+    return minDiff;
+}
+
+int main()
+{
+    vector<int>a={1,5,6,12};
+    int arrSum = findSum(a);
+    cout<<minSubsetSumDiff(a,arrSum);
+    return 0;
+}

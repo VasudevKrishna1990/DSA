@@ -1,0 +1,63 @@
+class Solution {
+public:
+    int findSum(vector<int>&nums){
+        int sum =0;
+        for(int v:nums)
+            sum+=v;
+        return sum;
+    }
+    
+    int solve(vector<int>&nums, int sum)
+    {
+        // No of subsets with sum == sum
+        vector<vector<int>>t(nums.size()+1,vector<int>(sum+1,0));
+        for(int i =0;i<nums.size()+1;i++){
+            for(int j=0;j<sum+1;j++){
+                if(i == 0)
+                    t[i][j] = 0;
+                if(j == 0)
+                    t[i][j] = 1;
+                
+                if(i!=0 && j!= 0){
+                    if(j >= nums[i-1]){
+                        t[i][j] = t[i-1][j-nums[i-1]] +t[i-1][j];
+                    }
+                    else
+                    {
+                        t[i][j] = t[i-1][j];
+                    }
+                }
+            }
+        }
+        return t[nums.size()][sum];  
+    }
+    
+    int countAndRemoveZeros(vector<int>&nums){
+        int count =0;
+        for(int i =0;i<nums.size();){
+            if(nums[i] == 0)
+            {
+                count +=1;
+                nums.erase(nums.begin()+i);
+            }
+            else
+                i++;
+        }
+        return count;
+    }
+    
+    int findTargetSumWays(vector<int>& nums, int target) {
+        
+        int countZero = countAndRemoveZeros(nums);
+        int sum = findSum(nums);
+        
+        int subsetSum = (sum - target);
+        if(subsetSum % 2 != 0 || sum < target)
+            return 0;
+        
+        int totalWays = solve(nums,subsetSum/2); 
+        if(totalWays) 
+             totalWays *= pow(2,countZero);
+        return totalWays;
+    }   
+};

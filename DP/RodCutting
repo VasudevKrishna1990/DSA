@@ -1,0 +1,40 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<vector>
+using namespace std;
+
+    int solve(vector<int>price, vector<int>len,int W,int N){
+        if(W == 0 || N == 0)
+            return 0;
+        if(W >= len[N-1])
+            return max(price.at(N-1) + solve(price,len,W-len.at(N-1),N) , solve(price,len,W,N-1));
+        return solve(price,len,W,N-1);
+    }
+    int cutRod(int price[], int n) {
+        vector<int>p(n,0);
+        vector<int>l(n,0);
+        p.clear();
+        p.clear();
+        for(int i =0;i<n;i++){
+            p.push_back(price[i]);
+            l.push_back(i+1);
+        }
+        for(int val:l)
+            cout<<val <<" " ;
+        //return solve(p,l,n,n);
+        return 0;
+    }
+
+int main()
+{
+    int N = 5;
+    cout<<cutRodProduct(N);
+    return 0;
+}

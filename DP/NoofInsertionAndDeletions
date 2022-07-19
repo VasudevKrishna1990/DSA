@@ -1,0 +1,29 @@
+    int solve(string s1,string s2,int l1,int l2,vector<vector<int>>&dp){
+        if(l1 == 0 || l2 == 0)
+            return 0;
+        if(dp[l1][l2] != -1)
+            return dp[l1][l2];
+        
+        if(s1[l1-1] == s2[l2-1]){
+           return dp[l1][l2] = 1 + solve(s1,s2,l1-1,l2-1,dp);
+        }
+        else
+        {
+           return dp[l1][l2] = max(solve(s1,s2,l1,l2-1,dp),
+                                        solve(s1,s2,l1-1,l2,dp));
+        }
+        
+    }
+    
+    int findLCS(string s1,string s2){
+        vector<vector<int>>dp(s1.length()+1,vector<int>(s2.length()+1,-1));
+        return solve(s1,s2,s1.length(),s2.length(),dp);
+    }
+
+    int minDistance(string word1, string word2) {
+        int lcs = findLCS(word1,word2);
+        cout<<lcs<<endl;
+        int ans = word1.length() - lcs;
+        ans += word2.length()-lcs;
+        return ans;
+    }

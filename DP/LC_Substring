@@ -1,0 +1,62 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<unordered_map>
+#include<vector>
+using namespace std;
+
+int lcs(string x,string y, int xLen,int yLen,int count,unordered_map<string,int>&sMap)
+{
+    if(xLen == 0|| yLen == 0)
+        return count;
+    string key = xLen + "lcs" + yLen;
+    if(sMap.find(key)!= sMap.end()){
+        return sMap[key];
+    }
+    if(x[xLen-1] == y[yLen-1])
+        count = lcs(x,y,xLen-1,yLen-1,count+1,sMap);
+    count = max(count,max(lcs(x,y,xLen-1,yLen,0,sMap),lcs(x,y,xLen,yLen-1,0,sMap)));
+    sMap[key] = count;
+    return count;
+}
+
+int lcs_tab(string x,string y, int xLen,int yLen){
+    int maxVal = -1;
+    vector<vector<int>>t(xLen+1,vector<int>(yLen+1,0));
+    for(int i =0;i<xLen+1;i++){
+        for(int j =0;j<yLen+1;j++){
+            if(i == 0 || j == 0)
+                continue;
+            else
+            {
+                if(x[i-1] == y[j-1]){
+                    t[i][j] = 1+t[i-1][j-1];
+                    if(maxVal < t[i][j])
+                        maxVal = t[i][j];
+                }
+                else
+                {
+                    t[i][j] = 0;
+                }
+            }
+        }
+    }
+    return max(maxVal,t[xLen][yLen]);
+}
+
+
+int main()
+{
+    string x = "GeeksforGeeks";
+    string y = "geeks";
+    unordered_map<string,int>sMap;
+    //cout<<lcs(x,y,x.length(),y.length(),0,sMap)<<endl;
+    cout<<lcs_tab(x,y,x.length(),y.length());
+    return 0;
+}

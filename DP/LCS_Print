@@ -1,0 +1,104 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <iostream>
+#include<cstring>
+#include<vector>
+#include<algorithm>
+using namespace std;
+int dp[101][101];
+int solve(string x,string y,int xLen,int yLen){
+    if(xLen == 0 || yLen == 0)
+        return 0;
+    if(dp[xLen][yLen] != -1)
+        return dp[xLen][yLen];
+    if(x[xLen-1] == y[yLen-1])
+        return dp[xLen][yLen] = 1+ solve(x,y,xLen-1,yLen-1);
+    else{
+        return dp[xLen][yLen] = max(solve(x,y,xLen-1,yLen),solve(x,y,xLen,yLen-1));
+    }
+}
+
+int solveTab(string x, string y,int xLen,int yLen,string& res){
+    
+    vector<vector<int>>t(xLen+1,vector<int>(yLen+1,0));
+    for(int i =0;i<xLen+1;i++){
+        for(int j =0;j<yLen+1;j++){
+            if(i ==0 || j == 0){
+                t[i][j] = 0;
+            }
+            else{
+                if(x[i-1] == y[j-1]){
+                    t[i][j] = 1 + t[i-1][j-1];
+                }
+                else{
+                    t[i][j] = max(t[i-1][j] ,t[i][j-1]);
+                }
+            }
+        }
+    }
+    
+    int i = xLen;
+    int j = yLen;
+    while(i > 0 && j > 0)
+    {
+        if(x[i-1] == y[j-1]){
+            res+=(x[i-1]);
+            i-=1;
+            j-=1;
+        }
+        else{
+            if(t[i][j-1] > t[i-1][j])
+                j -=1;
+            else
+                i -=1;
+        }
+    }
+    return t[xLen][yLen];
+}
+
+void lcs_recursive(string x, string y,int xLen,int yLen,string& opt){
+    if(xLen == 0 || yLen == 0)
+        return;
+    if(x[xLen -1 ] == y[yLen - 1])
+    {
+         opt += x[xLen-1];
+         lcs_recursive(x,y,xLen-1,yLen-1,opt);
+    }
+    else
+    {
+          string op1 = opt;
+          string op2 = opt;
+          lcs_recursive(x,y,xLen,yLen-1,op1);
+          lcs_recursive(x,y,xLen-1,yLen,op2);
+          if(op1.length() > op2.length())
+            opt = op1;
+          else
+            opt = op2;
+    }
+    return;
+}
+
+int main()
+{
+    string x = "abcdghjk";
+    string y = "adhkg";
+    //memset(dp,-1,sizeof(dp));
+    string res;
+    //lcs_recursive(x,y,x.length(),y.length(),res);
+    int len = solveTab(x,y,x.length(),y.length(),res);
+    reverse(res.begin(),res.end());
+    cout<<len <<endl;
+    string s ="adhk";
+    string s1;
+    for(char c:s)
+        s1 += c;
+    //if(len == res.length())
+        cout<<res <<res.length() <<" " <<s.length() <<" " <<s1.length();
+    return 0;
+}

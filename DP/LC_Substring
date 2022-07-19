@@ -9,6 +9,7 @@ Code, Compile, Run and Debug online from anywhere in world.
 #include <iostream>
 #include<unordered_map>
 #include<vector>
+#include<algorithm>
 using namespace std;
 
 int lcs(string x,string y, int xLen,int yLen,int count,unordered_map<string,int>&sMap)
@@ -26,8 +27,20 @@ int lcs(string x,string y, int xLen,int yLen,int count,unordered_map<string,int>
     return count;
 }
 
+struct cord{
+    int x;
+    int y;
+    int maxVal;
+    cord(){
+        maxVal = -1;
+        x =0;
+        y =0;
+    }
+};
+
 int lcs_tab(string x,string y, int xLen,int yLen){
-    int maxVal = -1;
+    //int maxVal = -1;
+    cord c;
     vector<vector<int>>t(xLen+1,vector<int>(yLen+1,0));
     for(int i =0;i<xLen+1;i++){
         for(int j =0;j<yLen+1;j++){
@@ -37,8 +50,12 @@ int lcs_tab(string x,string y, int xLen,int yLen){
             {
                 if(x[i-1] == y[j-1]){
                     t[i][j] = 1+t[i-1][j-1];
-                    if(maxVal < t[i][j])
-                        maxVal = t[i][j];
+                    if(c.maxVal < t[i][j]){
+                        c.maxVal = t[i][j];
+                        c.x = i;
+                        c.y = j;
+                    }
+                        
                 }
                 else
                 {
@@ -47,14 +64,28 @@ int lcs_tab(string x,string y, int xLen,int yLen){
             }
         }
     }
-    return max(maxVal,t[xLen][yLen]);
+    
+    int i = c.x;
+    int j = c.y;
+    int len = c.maxVal;
+    string temp;
+
+    while(i>0 && j>0 && len){
+        temp+= x[i-1];
+        i-=1;
+        j-=1;
+        len-=1;
+    }
+    reverse(temp.begin(),temp.end());
+    cout<<temp<<endl;
+    return max(c.maxVal,t[xLen][yLen]);
 }
 
 
 int main()
 {
-    string x = "GeeksforGeeks";
-    string y = "geeks";
+    string x = "GeeksforGeeKs";
+    string y = "Geeks";
     unordered_map<string,int>sMap;
     //cout<<lcs(x,y,x.length(),y.length(),0,sMap)<<endl;
     cout<<lcs_tab(x,y,x.length(),y.length());
